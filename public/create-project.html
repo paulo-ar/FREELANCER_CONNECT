@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Publicar Proyecto | Freelancer Conect</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/app.js" defer></script>
+  <script src="/js/projects.js" defer></script>
+</head>
+<body>
+  <nav class="navbar"><a class="brand" href="/"><span class="brand-mark">FC</span>Freelancer Conect</a><div class="nav-links" data-nav></div></nav>
+  <main class="shell">
+    <form class="card stack" data-create-project-form novalidate>
+      <div class="section-head">
+        <div><h1>Publicar Proyecto</h1><p class="muted">Describe el alcance, presupuesto y habilidades necesarias.</p></div>
+        <button class="btn btn-primary" type="submit" data-publish-project>Publicar</button>
+      </div>
+      <p data-status role="status" aria-live="polite"></p>
+      <label>Titulo<input class="input-dark" name="project_title" required></label>
+      <label>Descripcion<textarea class="input-dark" name="project_description" required></textarea></label>
+      <div class="grid-3">
+        <label>Categoria<input class="input-dark" name="project_category_identifier" placeholder="web" required></label>
+        <label>Tipo de presupuesto
+          <select class="input-dark" name="project_budget_type">
+            <option value="fixed">fixed</option>
+            <option value="hourly">hourly</option>
+          </select>
+        </label>
+        <label>Experiencia
+          <select class="input-dark" name="project_experience_level">
+            <option value="entry">entry</option>
+            <option value="intermediate">intermediate</option>
+            <option value="expert">expert</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid-3">
+        <label>Presupuesto minimo<input class="input-dark" name="project_budget_minimum" type="number" min="1" required></label>
+        <label>Presupuesto maximo<input class="input-dark" name="project_budget_maximum" type="number" min="1" required></label>
+        <label>Duracion estimada<input class="input-dark" name="project_duration_estimate" placeholder="4 semanas"></label>
+      </div>
+      <label>Skills requeridas separadas por coma<input class="input-dark" name="project_skills_required" placeholder="Node.js, CSS, Supabase" required></label>
+    </form>
+  </main>
+  <div class="modal-backdrop" data-project-popup hidden>
+    <section class="modal stack" role="dialog" aria-modal="true" aria-labelledby="project-popup-title">
+      <div class="inline">
+        <div class="modal-status" data-project-popup-icon></div>
+        <div>
+          <h2 id="project-popup-title" data-project-popup-title></h2>
+          <p class="muted" data-project-popup-message></p>
+        </div>
+      </div>
+      <div class="inline" data-project-popup-actions></div>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro | Freelancer Conect</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/app.js" defer></script>
+  <script src="/js/auth.js" defer></script>
+</head>
+<body>
+  <nav class="navbar"><a class="brand" href="/"><span class="brand-mark">FC</span>Freelancer Conect</a><div class="nav-links" data-nav></div></nav>
+  <main class="auth-wrap">
+    <form class="auth-card stack" data-register-form>
+      <h1>Crear cuenta</h1>
+      <input type="hidden" name="user_role" value="freelancer">
+      <div class="grid-2">
+        <button class="role-card" type="button" data-role-card="freelancer" aria-pressed="true"><strong>Freelancer</strong><br><span class="muted">Enviar propuestas</span></button>
+        <button class="role-card" type="button" data-role-card="client" aria-pressed="false"><strong>Cliente</strong><br><span class="muted">Publicar proyectos</span></button>
+      </div>
+      <label>Nombre completo<input class="input-dark" name="display_name" required></label>
+      <label>Email<input class="input-dark" name="email" type="email" required></label>
+      <div class="grid-2">
+        <label>Password<input class="input-dark" name="password" type="password" minlength="6" required></label>
+        <label>Confirmar password<input class="input-dark" name="confirm_password" type="password" minlength="6" required></label>
+      </div>
+      <button class="btn btn-primary" type="submit">Registrarse</button>
+      <p data-status></p>
+    </form>
+  </main>
+</body>
+</html>

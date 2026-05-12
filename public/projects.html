@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proyectos | Freelancer Conect</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/app.js" defer></script>
+  <script src="/js/projects.js" defer></script>
+</head>
+<body>
+  <nav class="navbar"><a class="brand" href="/"><span class="brand-mark">FC</span>Freelancer Conect</a><div class="nav-links" data-nav></div></nav>
+  <main class="shell stack">
+    <section class="section-head">
+      <div><h1>Proyectos</h1><p class="muted">Encuentra oportunidades abiertas y filtra en tiempo real.</p></div>
+      <a class="btn btn-primary" href="/create-project.html" data-client-only>Publicar Proyecto</a>
+    </section>
+    <form class="card grid-3" data-project-filters>
+      <label>Buscar<input class="input-dark" name="q" placeholder="App web, branding, data..."></label>
+      <label>Categoria<input class="input-dark" name="category" placeholder="web, design, marketing"></label>
+      <label>Presupuesto maximo<input class="input-dark" name="maxBudget" type="number" min="0"></label>
+    </form>
+    <section class="grid-3" data-project-list></section>
+  </main>
+</body>
+</html>

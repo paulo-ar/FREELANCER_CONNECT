@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mensajes | Freelancer Conect</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/app.js" defer></script>
+  <script src="/js/messages.js" defer></script>
+</head>
+<body>
+  <nav class="navbar"><a class="brand" href="/"><span class="brand-mark">FC</span>Freelancer Conect</a><div class="nav-links" data-nav></div></nav>
+  <main class="shell stack">
+    <div class="section-head"><div><h1>Mensajes</h1><p class="muted">Conversaciones por proyecto con realtime de Supabase.</p></div></div>
+    <section class="chat-layout">
+      <aside class="chat-panel conversation-list" data-conversations></aside>
+      <section class="chat-panel stack">
+        <div class="message-stream" data-message-stream></div>
+        <form class="inline" data-message-form>
+          <input class="input-dark" name="message_text" placeholder="Escribe un mensaje..." required>
+          <button class="btn btn-primary" type="submit">Enviar</button>
+        </form>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

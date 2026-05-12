@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ingresar | Freelancer Conect</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/js/app.js" defer></script>
+  <script src="/js/auth.js" defer></script>
+</head>
+<body>
+  <nav class="navbar"><a class="brand" href="/"><span class="brand-mark">FC</span>Freelancer Conect</a><div class="nav-links" data-nav></div></nav>
+  <main class="auth-wrap">
+    <form class="auth-card stack" data-login-form>
+      <h1>Ingresar</h1>
+      <label>Email<input class="input-dark" name="email" type="email" required></label>
+      <label>Password<input class="input-dark" name="password" type="password" required></label>
+      <button class="btn btn-primary" type="submit">Entrar</button>
+      <p data-status></p>
+      <p class="muted"><a href="/forgot-password.html">Recuperar contrasena</a> · <a href="/register.html">Crear cuenta</a></p>
+    </form>
+  </main>
+</body>
+</html>
