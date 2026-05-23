@@ -147,10 +147,25 @@ async function redirectToDashboard() {
   window.location.href = profile.user_role === 'client' ? '/dashboard.html?role=client' : '/dashboard.html?role=freelancer';
 }
 
+function canManageProject(project) {
+  return appState.profile?.user_role === 'client' && project.client_id === appState.user?.id;
+}
+
+async function deleteProject(projectId) {
+  return apiFetch(`/api/projects/${projectId}`, {
+    method: 'DELETE',
+    body: JSON.stringify({})
+  });
+}
+
 function projectCard(project) {
   const skills = (project.project_skills_required || []).slice(0, 4).map((skill) => `<span class="badge">${skill}</span>`).join('');
+  const deleteButton = canManageProject(project)
+    ? `<button class="btn btn-danger" type="button" data-delete-project="${project.id}">Eliminar</button>`
+    : '';
+
   return `
-    <article class="project-card">
+    <article class="project-card" data-project-card="${project.id}">
       <div class="stack">
         <div class="inline">
           <span class="badge badge-success">${project.project_status || 'open'}</span>
@@ -166,7 +181,10 @@ function projectCard(project) {
         <div class="inline">${skills}</div>
         <div class="row-item">
           <strong>${money(project.project_budget_minimum)} - ${money(project.project_budget_maximum)}</strong>
-          <a class="btn btn-outline" href="/project-details.html?id=${project.id}">Ver</a>
+          <div class="inline">
+            <a class="btn btn-outline" href="/project-details.html?id=${project.id}">Ver</a>
+            ${deleteButton}
+          </div>
         </div>
       </div>
     </article>

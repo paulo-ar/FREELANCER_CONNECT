@@ -24,6 +24,21 @@ function dashboardReceivedProposal(proposal) {
   `;
 }
 
+function dashboardProjectRow(project) {
+  return `
+    <div class="row-item" data-project-row="${project.id}">
+      <div>
+        <strong>${project.project_title}</strong>
+        <p class="muted">${project.project_status}</p>
+      </div>
+      <div class="inline">
+        <a class="btn btn-outline" href="/project-details.html?id=${project.id}">Abrir</a>
+        <button class="btn btn-danger" type="button" data-delete-project="${project.id}">Eliminar</button>
+      </div>
+    </div>
+  `;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   await requireAuth();
   const profile = await loadProfile();
@@ -41,13 +56,34 @@ document.addEventListener('DOMContentLoaded', async () => {
       </section>
       <section class="card stack">
         <div class="section-head"><h2>Mis Proyectos</h2><a class="btn btn-outline" href="/projects.html">Explorar</a></div>
-        <div class="list">${dashboard.projects.map((project) => `<div class="row-item"><div><strong>${project.project_title}</strong><p class="muted">${project.project_status}</p></div><a class="btn btn-outline" href="/project-details.html?id=${project.id}">Abrir</a></div>`).join('') || '<div class="empty-state">Aun no hay proyectos publicados.</div>'}</div>
+        <div class="list" data-client-projects>${dashboard.projects.map(dashboardProjectRow).join('') || '<div class="empty-state">Aun no hay proyectos publicados.</div>'}</div>
       </section>
       <section class="card stack">
         <div class="section-head"><h2>Propuestas recibidas</h2><p class="muted" data-proposal-status></p></div>
         <div class="list" data-received-proposals>${(dashboard.receivedProposals || []).map(dashboardReceivedProposal).join('') || '<div class="empty-state">Aun no has recibido propuestas.</div>'}</div>
       </section>
     `;
+
+    root.querySelector('[data-client-projects]')?.addEventListener('click', async (event) => {
+      const deleteButton = event.target.closest('[data-delete-project]');
+      if (!deleteButton) return;
+
+      const confirmed = window.confirm('Eliminar este proyecto tambien eliminara sus propuestas, conversaciones y mensajes. Esta accion no se puede deshacer.');
+      if (!confirmed) return;
+
+      deleteButton.disabled = true;
+      try {
+        await deleteProject(deleteButton.dataset.deleteProject);
+        const row = deleteButton.closest('[data-project-row]');
+        if (row) row.remove();
+        if (!root.querySelector('[data-client-projects] [data-project-row]')) {
+          root.querySelector('[data-client-projects]').innerHTML = '<div class="empty-state">Aun no hay proyectos publicados.</div>';
+        }
+      } catch (error) {
+        alert(error.message);
+        deleteButton.disabled = false;
+      }
+    });
 
     root.querySelector('[data-received-proposals]')?.addEventListener('click', async (event) => {
       const actionButton = event.target.closest('[data-proposal-action]');

@@ -300,6 +300,37 @@ app.post('/api/projects', requireUser, async (req, res) => {
   res.status(201).json(consolidatedProject);
 });
 
+app.delete('/api/projects/:id', requireUser, async (req, res) => {
+  const appUser = await getAppUser(req.user.id).catch((error) => {
+    res.status(400).json({ error: error.message });
+    return null;
+  });
+  if (!appUser) return;
+  if (appUser.user_role !== 'client') {
+    return res.status(403).json({ error: 'Solo los clientes pueden eliminar proyectos.' });
+  }
+
+  const { data: project, error: readError } = await supabaseAdmin
+    .from('projects')
+    .select('id, client_id')
+    .eq('id', req.params.id)
+    .single();
+
+  if (readError) return res.status(404).json({ error: readError.message });
+  if (project.client_id !== req.user.id) {
+    return res.status(403).json({ error: 'Solo el cliente dueno del proyecto puede eliminarlo.' });
+  }
+
+  const { error: deleteError } = await supabaseAdmin
+    .from('projects')
+    .delete()
+    .eq('id', req.params.id)
+    .eq('client_id', req.user.id);
+
+  if (deleteError) return res.status(400).json({ error: deleteError.message });
+  res.json({ id: req.params.id, deleted: true });
+});
+
 app.get('/api/projects/:id', requireUser, async (req, res) => {
   const { data, error } = await supabaseAdmin
     .from('projects')

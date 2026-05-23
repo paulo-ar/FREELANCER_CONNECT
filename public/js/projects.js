@@ -15,6 +15,26 @@ async function loadProjects() {
   list.innerHTML = projects.length ? projects.map(projectCard).join('') : '<div class="empty-state">No se encontraron proyectos.</div>';
 }
 
+async function handleProjectDelete(projectId, { redirect = false } = {}) {
+  if (!projectId) return;
+  const confirmed = window.confirm('Eliminar este proyecto tambien eliminara sus propuestas, conversaciones y mensajes. Esta accion no se puede deshacer.');
+  if (!confirmed) return;
+
+  await deleteProject(projectId);
+
+  if (redirect) {
+    window.location.href = '/dashboard.html';
+    return;
+  }
+
+  const card = document.querySelector(`[data-project-card="${projectId}"]`);
+  if (card) card.remove();
+
+  if (document.querySelector('[data-project-list]')) {
+    await loadProjects();
+  }
+}
+
 function ensureProjectPopup() {
   let popup = document.querySelector('[data-project-popup]');
   if (popup) {
@@ -246,6 +266,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       await loadProjects();
     }
 
+    document.querySelector('[data-project-list]')?.addEventListener('click', async (event) => {
+      const deleteButton = event.target.closest('[data-delete-project]');
+      if (!deleteButton) return;
+
+      deleteButton.disabled = true;
+      try {
+        await handleProjectDelete(deleteButton.dataset.deleteProject);
+      } catch (error) {
+        alert(error.message);
+        deleteButton.disabled = false;
+      }
+    });
+
     document.querySelector('[data-project-filters]')?.addEventListener('keyup', loadProjects);
     document.querySelector('[data-project-filters]')?.addEventListener('change', loadProjects);
   } catch (error) {
@@ -287,7 +320,10 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span class="muted">Publicado el ${formatDate(project.created_at)}</span>
             </div>
           </div>
-          <strong>${money(project.project_budget_minimum)} - ${money(project.project_budget_maximum)}</strong>
+          <div class="stack">
+            <strong>${money(project.project_budget_minimum)} - ${money(project.project_budget_maximum)}</strong>
+            ${isOwner ? `<button class="btn btn-danger" type="button" data-delete-project="${project.id}">Eliminar proyecto</button>` : ''}
+          </div>
         </div>
         <p>${project.project_description}</p>
         <div class="inline">${(project.project_skills_required || []).map((skill) => `<span class="badge">${skill}</span>`).join('')}</div>
@@ -329,6 +365,17 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="list" data-proposals-list>${(project.proposals || []).map(proposalReceivedCard).join('') || '<div class="empty-state">Aun no hay propuestas.</div>'}</div>
         </section>` : ''}
     `;
+
+    detailRoot.querySelector('[data-delete-project]')?.addEventListener('click', async (event) => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      try {
+        await handleProjectDelete(button.dataset.deleteProject, { redirect: true });
+      } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+      }
+    });
 
     detailRoot.querySelector('[data-proposals-list]')?.addEventListener('click', async (event) => {
       const actionButton = event.target.closest('[data-proposal-action]');
